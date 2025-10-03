@@ -47,12 +47,4 @@ fi
 echo "✅ Docker CLI: $(docker --version || echo 'docker not ready yet')"
 echo "✅ Compose v2: $(docker compose version || echo 'compose not ready yet')"
 
-# Minimal run test (skip failure)
-if docker info >/dev/null 2>&1; then
-  echo "🔎 Running hello-world test container..."
-  docker run --rm hello-world || true
-else
-  echo "ℹ️  Docker daemon not reachable yet. If on WSL, ensure Docker Desktop is running OR start the Linux service after enabling systemd."
-fi
-
 echo "🎯 Docker setup complete."
