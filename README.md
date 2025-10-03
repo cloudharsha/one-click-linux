@@ -7,4 +7,4 @@ You can run any script directly without cloning the repo.
 
 ### Install kind
 ```bash
-curl -fsSL https://github.com/cloudharsha/one-click-linux/main/kind-install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/cloudharsha/one-click-linux/main/kind-install.sh | bash
