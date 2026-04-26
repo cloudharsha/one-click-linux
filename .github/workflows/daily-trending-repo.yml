@@ -24,6 +24,9 @@ jobs:
         run: bash scripts/update-trending-repo.sh
 
       - name: Commit generated markdown
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMIT_AUTHOR_LOGIN: ${{ github.repository_owner }}
         run: |
           git add trending
 
@@ -32,7 +35,16 @@ jobs:
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          api_headers=(-H "Accept: application/vnd.github+json")
+          if [ -n "${GH_TOKEN:-}" ]; then
+            api_headers+=(-H "Authorization: Bearer ${GH_TOKEN}")
+          fi
+
+          author_id="$(curl -fsSL "${api_headers[@]}" \
+            "https://api.github.com/users/${COMMIT_AUTHOR_LOGIN}" \
+            | python3 -c 'import json, sys; print(json.load(sys.stdin)["id"])')"
+
+          git config user.name "${COMMIT_AUTHOR_LOGIN}"
+          git config user.email "${author_id}+${COMMIT_AUTHOR_LOGIN}@users.noreply.github.com"
           git commit -m "docs: add daily trending repo"
           git push
